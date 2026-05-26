@@ -8,6 +8,7 @@
 
 - `product/`: プロダクト概要、MVPスコープ、ロードマップ
 - `requirements/`: 機能要件、非機能要件
+- `technology/`: API設計、DB設計、セキュリティ方針
 - `project/`: 開発計画、マイルストーン、GitHubプロジェクト管理
 - `refarences/`: 参考URL、外部記事、調査メモ
 
@@ -16,6 +17,9 @@
 - [プロダクト概要](product/01_プロダクト概要.md)
 - [機能要件](requirements/01_機能要件.md)
 - [非機能要件](requirements/02_非機能要件.md)
+- [セキュリティ方針](technology/02_セキュリティ方針.md)
+- [API設計](technology/03_API設計.md)
+- [DB設計](technology/04_DB設計.md)
 - [開発計画](project/01_開発計画.md)
 - [Claude関連のURL](refarences/01_Claude関連のURL.md)
 
@@ -34,6 +38,5 @@
 必要に応じて、次のディレクトリを追加します。
 
 - `research/`: 学習環境、Flutter実行方式、AI教材生成に関する調査
-- `technology/`: 技術選定、フロントエンド、バックエンド、実行環境、LLM連携
 - `architecture/`: システム、教材管理、実行環境、Admin承認、多言語対応の設計
 - `design/`: 画面一覧、画面設計、UI方針
