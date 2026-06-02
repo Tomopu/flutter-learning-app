@@ -1,4 +1,4 @@
-# refarences
+# references
 
 このディレクトリでは、参考URL、外部記事、調査メモを管理します。
 

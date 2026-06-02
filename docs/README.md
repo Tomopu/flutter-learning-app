@@ -6,22 +6,31 @@
 
 ## 構成
 
-- `product/`: プロダクト概要、MVPスコープ、ロードマップ
+- `product/`: プロダクト概要、初期スコープ、将来方針
 - `requirements/`: 機能要件、非機能要件
-- `technology/`: API設計、DB設計、セキュリティ方針
-- `project/`: 開発計画、マイルストーン、GitHubプロジェクト管理
-- `refarences/`: 参考URL、外部記事、調査メモ
+- `technology/`: 技術選定、セキュリティ方針、API設計、DB設計、バックエンド設計
+- `architecture/`: システムアーキテクチャ
+- `design/`: 画面一覧、画面設計、UI方針、画面プロトタイプ
+- `project/`: 開発計画
+- `references/`: 参考URL、外部記事、調査メモ
+- `images/`: READMEや設計ドキュメントで使用する画像
 
 ## 現在あるドキュメント
 
 - [プロダクト概要](product/01_プロダクト概要.md)
 - [機能要件](requirements/01_機能要件.md)
 - [非機能要件](requirements/02_非機能要件.md)
+- [技術選定](technology/01_技術選定.md)
 - [セキュリティ方針](technology/02_セキュリティ方針.md)
 - [API設計](technology/03_API設計.md)
 - [DB設計](technology/04_DB設計.md)
+- [バックエンド設計](technology/05_バックエンド設計.md)
+- [システムアーキテクチャ](architecture/01_システムアーキテクチャ.md)
+- [画面一覧](design/01_画面一覧.md)
+- [画面設計](design/02_画面設計.md)
+- [UI方針](design/03_UI方針.md)
 - [開発計画](project/01_開発計画.md)
-- [Claude関連のURL](refarences/01_Claude関連のURL.md)
+- [Claude関連のURL](references/01_Claude関連のURL.md)
 
 ## MVPで重視する事項
 
@@ -31,12 +40,12 @@
 - 編集対象ファイルは限定せず、プロジェクト全体を編集対象にする
 - コードはブラウザ上に保存し、プロジェクト全体のダウンロード・アップロードに対応する
 - ファイル単位またはプロジェクト単位で初期状態へリセットできるようにする
+- 学習者が模範解答をMarkdown形式で確認できるようにする
+- コード提出と採点はMVPでは扱わず、将来拡張とする
 - 管理者向け画面で教材の手動追加・編集、LLMによるロードマップ・教材下書き生成、公開状態管理を扱う
 
-## 今後追加予定のディレクトリ
+## 今後追加する可能性があるディレクトリ
 
 必要に応じて、次のディレクトリを追加します。
 
 - `research/`: 学習環境、Flutter実行方式、AI教材生成に関する調査
-- `architecture/`: システム、教材管理、実行環境、Admin承認、多言語対応の設計
-- `design/`: 画面一覧、画面設計、UI方針
