@@ -29,6 +29,7 @@ GET  /api/courses
 GET  /api/lessons
 GET  /api/lessons/:lessonId
 GET  /api/lessons/:lessonId/initial-project
+GET  /api/lessons/:lessonId/solution
 POST /api/builds
 GET  /api/builds/:buildId
 GET  /api/builds/:buildId/logs
@@ -165,6 +166,27 @@ GET /api/lessons/:lessonId/initial-project
   ]
 }
 ```
+
+### 4.4 模範解答取得
+
+```text
+GET /api/lessons/:lessonId/solution
+```
+
+教材が定義する模範解答を返す。
+
+MVPでは、学習メイン画面の`模範解答`タブで表示するため、Markdown形式の本文を返す。ファイルごとのコードはMarkdownのコードブロックとして表現する。
+
+レスポンス例は次の通りである。
+
+````json
+{
+  "lessonId": "lesson_001",
+  "solutionMarkdown": "## 模範解答\n\n### lib/main.dart\n\n```dart\nvoid main() {\n  runApp(const MyApp());\n}\n```"
+}
+````
+
+模範解答取得は、現在の学習者コードを上書きしない。模範解答を現在のコードへ適用する機能はMVPでは扱わない。
 
 ## 5. 教材一括操作API
 
