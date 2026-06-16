@@ -56,7 +56,8 @@ LLM教材生成では、個別教材を直接作るのではなく、到達目�
 │   │   ├── 01_要求仕様書.md
 │   │   ├── 02_ユースケース.md
 │   │   ├── 03_受け入れ基準.md
-│   │   └── 04_非機能要件.md
+│   │   ├── 04_非機能要件.md
+│   │   └── 05_トレーサビリティ.md
 │   ├── 02_standards/
 │   │   ├── README.md
 │   │   ├── 01_ドキュメント管理規定.md
@@ -66,38 +67,53 @@ LLM教材生成では、個別教材を直接作るのではなく、到達目�
 │   ├── 03_design/
 │   │   ├── README.md
 │   │   ├── 01_architecture/
+│   │   │   ├── README.md
+│   │   │   ├── 01_システムアーキテクチャ.md
+│   │   │   ├── 02_教材管理アーキテクチャ.md
+│   │   │   ├── 03_実行環境アーキテクチャ.md
+│   │   │   └── 04_Admin承認フロー.md
 │   │   ├── 02_ui/
+│   │   │   ├── README.md
+│   │   │   ├── 00_images/
+│   │   │   ├── 01_画面一覧.md
+│   │   │   ├── 02_画面設計.md
+│   │   │   └── 03_UI方針.md
 │   │   ├── 03_api/
+│   │   │   ├── README.md
+│   │   │   └── 01_API設計.md
 │   │   ├── 04_data/
-│   │   └── 05_backend/
+│   │   │   ├── README.md
+│   │   │   └── 01_DB設計.md
+│   │   ├── 05_backend/
+│   │   │   ├── README.md
+│   │   │   └── 01_バックエンド設計.md
+│   │   ├── 06_frontend/
+│   │   │   ├── README.md
+│   │   │   └── 01_フロントエンド設計.md
+│   │   ├── 07_build-runtime/
+│   │   │   ├── README.md
+│   │   │   └── 01_ビルド実行環境設計.md
+│   │   └── 08_llm/
+│   │       ├── README.md
+│   │       └── 01_LLM連携設計.md
 │   ├── 04_project/
 │   │   ├── README.md
 │   │   └── 01_開発計画.md
 │   ├── 05_references/
 │   │   ├── README.md
 │   │   └── 01_Claude関連のURL.md
-│   ├── 06_images/
 │   └── 99_drafts/
+│       ├── README.md
 │       ├── 01_requirements/
 │       ├── 02_design/
 │       ├── 03_research/
 │       ├── 04_prototypes/
-│       └── 05_images/
+│       ├── 05_images/
+│       ├── 06_architecture/
+│       └── 07_technology/
 ├── claude-docs/
 │   ├── README.md
 │   └── claude-document-rules.md
-├── contents/
-│   └── flutter/
-│       └── practical-flutter/
-│           └── lesson-001/
-│               ├── lesson.md
-│               ├── metadata.json
-│               ├── initial_project/
-│               └── solution_project/
-├── apps/
-│   ├── web/
-│   └── api/
-└── packages/
 ```
 
 ## 現在の優先事項
