@@ -10,9 +10,9 @@ const S01CourseList = ({ onOpenLesson }) => {
   const allDiffs = ["すべて", "入門", "中級", "上級"];
   const diffMap = { beginner: "入門", intermediate: "中級", advanced: "上級" };
 
-  const filtered = LESSONS.filter((l) => l.state === "published")
-    .filter((l) => langFilter === "すべて" || l.lang === langFilter)
-    .filter((l) => diffFilter === "すべて" || diffMap[l.diff] === diffFilter);
+  const filtered = LESSONS.filter((l) => l.state === "published").
+  filter((l) => langFilter === "すべて" || l.lang === langFilter).
+  filter((l) => diffFilter === "すべて" || diffMap[l.diff] === diffFilter);
 
   const sorted = [...filtered].sort((a, b) => {
     if (sortBy === "num") return a.num.localeCompare(b.num);
@@ -32,33 +32,33 @@ const S01CourseList = ({ onOpenLesson }) => {
 
           <div className="s01-controls">
             <div className="chip-row">
-              {allLangs.map((lang) => (
-                <button
-                  key={lang}
-                  className={"chip" + (langFilter === lang ? " active" : "")}
-                  onClick={() => setLangFilter(lang)}
-                >
+              {allLangs.map((lang) =>
+              <button
+                key={lang}
+                className={"chip" + (langFilter === lang ? " active" : "")}
+                onClick={() => setLangFilter(lang)}>
+                
                   {lang}
                 </button>
-              ))}
+              )}
               <span className="ctrl-sep" />
-              {allDiffs.map((d) => (
-                <button
-                  key={d}
-                  className={"chip" + (diffFilter === d ? " active" : "")}
-                  onClick={() => setDiffFilter(d)}
-                >
+              {allDiffs.map((d) =>
+              <button
+                key={d}
+                className={"chip" + (diffFilter === d ? " active" : "")}
+                onClick={() => setDiffFilter(d)}>
+                
                   {d}
                 </button>
-              ))}
+              )}
             </div>
             <div className="s01-sort">
               <span className="count">{sorted.length} 件</span>
               <select
                 className="select"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
+                onChange={(e) => setSortBy(e.target.value)}>
+                
                 <option value="num">番号順</option>
                 <option value="title">タイトル順</option>
                 <option value="lang">言語順</option>
@@ -67,8 +67,8 @@ const S01CourseList = ({ onOpenLesson }) => {
           </div>
 
           <div className="lesson-grid">
-            {sorted.map((l) => (
-              <button key={l.id} className="lesson-card" onClick={() => onOpenLesson(l.id)}>
+            {sorted.map((l) =>
+            <button key={l.id} className="lesson-card" onClick={() => onOpenLesson(l.id)} style={{ width: "333px" }}>
                 <div className="lc-top">
                   <span className="lc-num">#{l.num}</span>
                   <span className={"badge diff-" + l.diff}>
@@ -86,17 +86,17 @@ const S01CourseList = ({ onOpenLesson }) => {
                   </span>
                 </div>
               </button>
-            ))}
-            {sorted.length === 0 && (
-              <div className="empty" style={{ gridColumn: "1 / -1" }}>
+            )}
+            {sorted.length === 0 &&
+            <div className="empty" style={{ gridColumn: "1 / -1" }}>
                 条件に一致する教材がありません。
               </div>
-            )}
+            }
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 window.S01CourseList = S01CourseList;

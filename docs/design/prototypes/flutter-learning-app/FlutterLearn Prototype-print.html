@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>FlutterLearn — Prototype (Print)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ── Print: flow the 教材一覧 (S01) across pages as a clean document ── */
+    @media print {
+      @page { size: portrait; margin: 1.2cm; }
+
+      html, body, #app {
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .app-shell { height: auto !important; }
+      .app-main { overflow: visible !important; }
+
+      /* Freeze any entrance animations at their end-state */
+      *, *::before, *::after {
+        animation-delay: -99s !important;
+        animation-duration: .001s !important;
+        animation-iteration-count: 1 !important;
+        animation-fill-mode: both !important;
+        animation-play-state: running !important;
+        transition-duration: 0s !important;
+      }
+
+      /* Header: keep brand, drop the interactive hamburger */
+      .app-header {
+        position: static !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid var(--border) !important;
+      }
+      .header-menu, .hamburger { display: none !important; }
+
+      /* S01 page → static, full-height document */
+      .page-s01, .s01-scroll {
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .s01-container { max-width: none !important; padding: 0 !important; }
+
+      /* Grid → fixed 2 columns for a tidy printed sheet */
+      .lesson-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px !important;
+      }
+      .lesson-card {
+        break-inside: avoid;
+        transform: none !important;
+        box-shadow: none !important;
+        border: 1px solid #d8dde6 !important;
+      }
+      .lesson-card .lc-desc { min-height: 0 !important; }
+
+      /* Hide the floating Tweaks panel & any toggle chrome */
+      [class*="tweak"], [id*="tweak"] { display: none !important; }
+
+      /* Force colors/backgrounds to print */
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+
+  <!-- React + Babel (must load BEFORE Monaco's AMD loader so UMD bundles
+       attach to globals rather than registering as anonymous AMD modules) -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Monaco Editor (AMD loader) -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/loader.js"></script>
+  <script>
+    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+      window.__monacoReady = true;
+    });
+  </script>
+
+  <script src="data.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="text/babel" src="ui.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="s01.jsx"></script>
+  <script type="text/babel" src="s02.jsx"></script>
+  <script type="text/babel" src="s03.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+
+  <!-- Auto-print once the app has rendered the lesson list + fonts are ready -->
+  <script type="text/babel">
+    (function () {
+      function ready() {
+        return document.querySelector(".lesson-card");
+      }
+      function waitAndPrint(tries) {
+        if (ready() || tries <= 0) {
+          Promise.resolve(document.fonts && document.fonts.ready)
+            .catch(function () {})
+            .then(function () {
+              setTimeout(function () { window.print(); }, 500);
+            });
+        } else {
+          setTimeout(function () { waitAndPrint(tries - 1); }, 150);
+        }
+      }
+      waitAndPrint(80);
+    })();
+  </script>
+</body>
+</html>
