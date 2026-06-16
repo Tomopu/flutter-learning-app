@@ -5,10 +5,10 @@ Flutterを実践的に学習するためのWebベース学習プラットフォ�
 教材の閲覧、コード編集、実行結果の確認、ビルドログの確認、LLMへの質問を1つのWebアプリ上で行える環境を目指します。
 
 - [docs 目次](docs/README.md)
-- [プロダクト概要](docs/product/01_プロダクト概要.md)
-- [機能要件](docs/requirements/01_機能要件.md)
-- [非機能要件](docs/requirements/02_非機能要件.md)
-- [開発計画](docs/project/01_開発計画.md)
+- [プロダクト概要](docs/01_requirements/00_プロダクト概要.md)
+- [要求仕様書](docs/01_requirements/01_要求仕様書.md)
+- [非機能要件](docs/01_requirements/04_非機能要件.md)
+- [開発計画](docs/04_project/01_開発計画.md)
 
 ## MVP方針
 
@@ -29,19 +29,19 @@ LLM教材生成では、個別教材を直接作るのではなく、到達目�
 ## 完成画面想定図
 
 ### S01 教材一覧画面
-![教材一覧画面](docs/images/S01_教材一覧画面.png)
+![教材一覧画面](docs/06_images/S01_教材一覧画面.png)
 
 ### S02 学習メイン画面 (コードエディタ + 教材閲覧)
-![学習メイン画面](docs/images/S02_01_学習メイン画面(コードエディタ+教材閲覧).png)
+![学習メイン画面](docs/06_images/S02_01_学習メイン画面%28コードエディタ+教材閲覧%29.png)
 
 ### S02 学習メイン画面 (コードエディタ + LLMチャット)
-![学習メイン画面](docs/images/S02_04_学習メイン画面(コードエディタ+LLMチャット).png)
+![学習メイン画面](docs/06_images/S02_04_学習メイン画面%28コードエディタ+LLMチャット%29.png)
 
 ### S03 管理者向け画面 (教材一覧)
-![管理者向け画面](docs/images/S03_01_管理者向け画面(教材一覧).png)
+![管理者向け画面](docs/06_images/S03_01_管理者向け画面%28教材一覧%29.png)
 
 ### S03 管理者向け画面 (教材編集)
-![管理者向け画面](docs/images/S03_02_管理者向け画面(教材編集+教材本文).png)
+![管理者向け画面](docs/06_images/S03_02_管理者向け画面%28教材編集+教材本文%29.png)
 
 ## 想定ディレクトリ構成
 
@@ -50,62 +50,39 @@ LLM教材生成では、個別教材を直接作るのではなく、到達目�
 ├── README.md
 ├── docs/
 │   ├── README.md
-│   ├── product/
+│   ├── 01_requirements/
 │   │   ├── README.md
-│   │   ├── 01_プロダクト概要.md
-│   │   ├── 02_MVPスコープ.md
-│   │   └── 03_ロードマップ.md
-│   ├── requirements/
+│   │   ├── 00_プロダクト概要.md
+│   │   ├── 01_要求仕様書.md
+│   │   ├── 02_ユースケース.md
+│   │   ├── 03_受け入れ基準.md
+│   │   └── 04_非機能要件.md
+│   ├── 02_standards/
 │   │   ├── README.md
-│   │   ├── 01_機能要件.md
-│   │   └── 02_非機能要件.md
-│   ├── research/
+│   │   ├── 01_ドキュメント管理規定.md
+│   │   ├── 02_コーディング規約.md
+│   │   ├── 03_セキュリティ方針.md
+│   │   └── 04_技術選定.md
+│   ├── 03_design/
 │   │   ├── README.md
-│   │   ├── 01_Progate型学習環境の調査.md
-│   │   ├── 02_Flutterオンライン実行方式.md
-│   │   └── 03_AI教材生成の調査.md
-│   ├── technology/
+│   │   ├── 01_architecture/
+│   │   ├── 02_ui/
+│   │   ├── 03_api/
+│   │   ├── 04_data/
+│   │   └── 05_backend/
+│   ├── 04_project/
 │   │   ├── README.md
-│   │   ├── 01_技術選定.md
-│   │   ├── 02_セキュリティ方針.md
-│   │   ├── 03_API設計.md
-│   │   ├── 04_DB設計.md
-│   │   ├── 05_バックエンド設計.md
-│   │   ├── 06_フロントエンド設計.md
-│   │   ├── 07_実行環境設計.md
-│   │   └── 08_LLM連携設計.md
-│   ├── architecture/
-│   │   ├── README.md
-│   │   ├── 01_システムアーキテクチャ.md
-│   │   ├── 02_教材管理アーキテクチャ.md
-│   │   ├── 03_実行環境アーキテクチャ.md
-│   │   ├── 04_Admin承認フロー.md
-│   │   └── 05_多言語対応方針.md
-│   ├── design/
-│   │   ├── README.md
-│   │   ├── 01_画面一覧.md
-│   │   ├── 02_画面設計.md
-│   │   ├── 03_UI方針.md
-│   │   └── prototypes/
-│   │       └── flutter-learning-app/
-│   │           ├── FlutterLearn Prototype.html
-│   │           ├── app.jsx
-│   │           ├── data.js
-│   │           ├── s01.jsx
-│   │           ├── s02.jsx
-│   │           ├── s03.jsx
-│   │           ├── styles.css
-│   │           ├── tweaks-panel.jsx
-│   │           └── ui.jsx
-│   ├── project/
-│   │   ├── README.md
-│   │   ├── 01_開発計画.md
-│   │   ├── 02_マイルストーン.md
-│   │   └── 03_GitHubプロジェクト管理.md
-│   ├── references/
+│   │   └── 01_開発計画.md
+│   ├── 05_references/
 │   │   ├── README.md
 │   │   └── 01_Claude関連のURL.md
-│   └── images/
+│   ├── 06_images/
+│   └── 99_drafts/
+│       ├── 01_requirements/
+│       ├── 02_design/
+│       ├── 03_research/
+│       ├── 04_prototypes/
+│       └── 05_images/
 ├── claude-docs/
 │   ├── README.md
 │   └── claude-document-rules.md
