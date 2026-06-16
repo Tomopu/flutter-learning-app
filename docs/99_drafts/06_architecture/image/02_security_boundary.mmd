@@ -1,0 +1,31 @@
+flowchart TD
+    Browser["Admin（ブラウザ）<br/>・個人利用前提: MVPでは認証なし許容<br/>・外部公開時: 認証・認可必須"]
+
+    Browser -->|HTTPS| BE
+
+    subgraph BE["バックエンド（信頼境界）"]
+        LLM["LLM安全対策<br/>・秘密情報を送らない<br/>・DB接続情報を送らない<br/>・ホストパスを送らない<br/>・生成物はdraftで保存<br/>・自動公開しない"]
+        Delete["削除操作<br/>確認済みリクエストのみ受け付ける"]
+        FileVal["ファイル検証<br/>・パス・サイズ・ファイル数・構成"]
+        DBA["DBアクセス処理"]
+    end
+
+    subgraph PS["プロジェクトストレージ"]
+        Init["initialProject"]
+        Sol["solutionProject"]
+        MVP1["MVP第一段階: ローカル"]
+        MVP2["MVP第二段階: S3 等"]
+        Init --> MVP1
+        Sol --> MVP1
+        MVP1 -.->|phase 2| MVP2
+    end
+
+    subgraph PG["PostgreSQL"]
+        Lesson["Lessonメタデータ"]
+        RS["Roadmap / Step"]
+        LlmGen["LlmGeneration"]
+        LangLabel["LanguageLabel"]
+    end
+
+    FileVal --> PS
+    DBA --> PG
