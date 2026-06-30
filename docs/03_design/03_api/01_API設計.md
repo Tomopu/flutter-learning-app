@@ -1,24 +1,20 @@
 # API設計
 
-## 1. 目的
+| 項目 | 内容 |
+|------|------|
+| 文書ID | DES-API-001 |
+| 作成日 | 2026-06-16 |
+| 更新日 | 2026-06-30 |
+| 状態 | 正式 |
+| 関連文書 | [システムアーキテクチャ](../01_architecture/01_システムアーキテクチャ.md), [バックエンド設計](../05_backend/01_バックエンド設計.md) |
 
-本ドキュメントは、Flutter学習アプリのMVPで必要となるAPI設計方針を定義する。
+## AI Summary
 
-MVPでは、教材閲覧、コード編集、サーバービルド、プレビュー、LLM質問、Admin教材管理、LLM教材生成を扱う。
+APIは学習者向け・管理者向け（/api/admin/*）・ビルド・LLM連携の4グループに分類する。ビルドとLLM生成は非同期（IDを即時返却→ポーリング）。エラーはcode/message/detailsの統一形式で返す。
 
-APIは、学習者向け機能、管理者向け機能、ビルド実行、LLM連携の責務を分けて設計する。
+## API分類
 
-## 2. 前提
-
-MVP第一段階では、フロントエンド、バックエンド、データベース、ビルド実行環境をローカルDocker上で動作させる。
-
-MVP第二段階では、GCP、AWSなどのクラウド上にデプロイし、ビルド要求ごとに一時的なワークスペースまたはコンテナを生成する。
-
-MVPでは本格的なログイン機能は必須としない。ただし、API設計上は学習者向けAPIと管理者向けAPIを分離し、将来的に認証・認可を追加できるようにする。
-
-## 3. API分類
-
-### 3.1 学習者向けAPI
+### 学習者向けAPI
 
 学習者向けAPIでは、公開済み教材の閲覧、教材詳細取得、ビルド要求、LLM質問を扱う。
 
@@ -37,9 +33,9 @@ GET  /api/builds/:buildId/artifacts
 POST /api/llm/questions
 ```
 
-ビルド系エンドポイントの詳細は [3.3 ビルド実行API](#33-ビルド実行api) を参照。
+ビルド系エンドポイントの詳細は [ビルド実行API](#ビルド実行api) を参照。
 
-### 3.2 管理者向けAPI
+### 管理者向けAPI
 
 管理者向けAPIでは、教材の追加、編集、公開状態変更、一括操作、言語ラベル管理、LLM教材生成、LLM教材修正案生成を扱う。
 
@@ -67,13 +63,7 @@ POST   /api/admin/llm/lesson-revisions
 GET    /api/admin/llm/generations/:generationId
 ```
 
-### 3.3 ビルド実行API
-
-ビルド実行APIでは、ブラウザ上のプロジェクトファイル一式を受け取り、サーバー側でFlutter Webビルドを実行する。
-
-MVP第一段階では、ローカルDocker上のビルド環境で処理する。
-
-MVP第二段階では、クラウド上の一時ワークスペースまたはコンテナで処理する。
+### ビルド実行API
 
 主なAPIは次の通りである。
 
@@ -84,11 +74,9 @@ GET  /api/builds/:buildId/logs          # ビルドログ取得
 GET  /api/builds/:buildId/artifacts     # ビルド成果物取得
 ```
 
-### 3.4 LLM連携API
+### LLM連携API
 
-LLM連携APIでは、学習者向け質問、Admin向けロードマップ生成、教材生成、教材修正案生成を扱う。
-
-主なAPIは次の通りである。Admin向けLLMエンドポイントは [3.2 管理者向けAPI](#32-管理者向けapi) と共通。
+Admin向けLLMエンドポイントは [管理者向けAPI](#管理者向けapi) と共通。
 
 ```text
 POST /api/llm/questions                  # 学習者向けLLM質問
@@ -97,9 +85,9 @@ POST /api/admin/llm/lessons              # 教材生成（Admin）
 POST /api/admin/llm/lesson-revisions     # 教材修正案生成（Admin）
 ```
 
-## 4. 教材一覧API
+## 教材一覧API
 
-### 4.0 コース一覧
+### コース一覧
 
 ```text
 GET /api/courses
@@ -107,7 +95,7 @@ GET /api/courses
 
 公開済みコース（`status: published`）の一覧を返す。返却項目はコースID、タイトル、概要、レベル。
 
-### 4.1 学習者向け教材一覧
+### 学習者向け教材一覧
 
 ```text
 GET /api/lessons
@@ -132,7 +120,7 @@ GET /api/lessons
 - プログラミング言語ラベル
 - 公開状態
 
-### 4.2 管理者向け教材一覧
+### 管理者向け教材一覧
 
 ```text
 GET /api/admin/lessons
@@ -148,7 +136,7 @@ GET /api/admin/lessons
 ?sort=updatedAt
 ```
 
-### 4.3 初期プロジェクト取得
+### 初期プロジェクト取得
 
 ```text
 GET /api/lessons/:lessonId/initial-project
@@ -167,7 +155,7 @@ GET /api/lessons/:lessonId/initial-project
 }
 ```
 
-### 4.4 模範解答取得
+### 模範解答取得
 
 ```text
 GET /api/lessons/:lessonId/solution
@@ -188,7 +176,7 @@ MVPでは、学習メイン画面の`模範解答`タブで表示するため、
 
 模範解答取得は、現在の学習者コードを上書きしない。模範解答を現在のコードへ適用する機能はMVPでは扱わない。
 
-## 5. 教材一括操作API
+## 教材一括操作API
 
 管理者は、複数教材を選択して公開、非公開、削除を一括実行できる。
 
@@ -210,7 +198,7 @@ POST /api/admin/lessons/bulk/delete
 
 個別の教材ステータス変更（承認・非公開）は `PUT /api/admin/lessons/:lessonId` の `status` フィールドで行う。一括操作エンドポイントと機能は同じだが、個別ボタンからの操作は単件 PUT で扱い、複数選択時のみ bulk エンドポイントを使用する。
 
-## 6. ビルドAPI
+## ビルドAPI
 
 ```text
 POST /api/builds
@@ -244,7 +232,7 @@ POST /api/builds
 
 MVP第一段階では、同時ビルド数に上限を設け、上限を超えるリクエストは待機または拒否する。
 
-## 7. LLM質問API
+## LLM質問API
 
 ```text
 POST /api/llm/questions
@@ -285,7 +273,7 @@ LLMへの問い合わせには、少なくとも次の情報を含める。
 
 秘密情報、APIキー、DB接続情報、ホストパスはリクエストに含めない。
 
-## 8. LLM教材生成API
+## LLM教材生成API
 
 LLM教材生成では、個別教材を直接生成するのではなく、到達目標と成果物からロードマップを作成し、各ステップに対応する教材下書きを生成する。
 
@@ -316,7 +304,7 @@ GET /api/admin/llm/generations/:generationId
 
 `status` が `pending` の間はポーリングまたはビルドAPIと同様のSSEで進捗を取得する。`completed` になったタイミングで `output` に生成結果が入る。
 
-## 9. Admin Roadmap管理API
+## Admin Roadmap管理API
 
 管理者は、LLMが生成したRoadmapを確認・編集し、各RoadmapStepにLessonを紐づけることができる。
 
@@ -338,7 +326,7 @@ RoadmapStep の更新では、LLM生成直後は `lessonId` がNULLのため、�
 }
 ```
 
-## 10. エラー方針
+## エラー方針
 
 APIエラーは、クライアントが処理しやすい形式で返す。
 
@@ -366,12 +354,3 @@ APIエラーは、クライアントが処理しやすい形式で返す。
 | `FORBIDDEN` | Admin権限が必要な操作を学習者が試みた |
 
 内部例外、秘密情報、ホスト環境のパスはレスポンスに含めない。
-
-## 11. 今後の検討事項
-
-- API認証方式
-- Admin権限管理
-- ビルドキュー
-- WebSocketまたはServer-Sent Eventsによるビルドログ配信
-- 成果物ストレージ
-- GitHub連携API
