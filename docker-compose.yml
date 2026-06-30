@@ -1,0 +1,131 @@
+name: flutter-learning-app
+
+# ─────────────────────────────────────────────────────────────────────────────
+# サービス構成
+#   frontend  : Next.js (ブラウザ向け)
+#   backend   : Node.js + Hono API (frontend・builder と通信)
+#   db        : PostgreSQL (教材・ビルド履歴・ユーザー進捗を永続化)
+#   builder   : Flutter SDK コンテナ (バックエンドからの要求で Flutter Web をビルド)
+#
+# ネットワーク（2層構造でセキュリティ境界を実現）
+#   app-net   : frontend ↔ backend ↔ db
+#   build-net : backend ↔ builder
+#
+#   ブラウザ → frontend (localhost:3000)
+#   frontend → backend (http://backend:4000)
+#   backend  → db     (postgres:5432)
+#   backend  → builder (http://builder:5000)
+#   builder から db への直接アクセスは不可（build-net のみ所属）
+#   ブラウザから builder への直接アクセスは不可
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── frontend ────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./apps/web
+      dockerfile: ../../docker/frontend/Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules   # 匿名ボリュームでホスト側の空 node_modules を上書きさせない
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+    networks:
+      - app-net
+    depends_on:
+      - backend
+
+  # ── backend ─────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./apps/api
+      dockerfile: ../../docker/backend/Dockerfile
+      target: dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules   # 匿名ボリュームでホスト側の空 node_modules を上書きさせない
+      - lesson_projects:/lesson-projects  # 教材の初期プロジェクト・模範解答を永続保存
+      - build_workspaces:/workspace       # builder と共有するビルド作業領域
+      - build_artifacts:/artifacts        # builder と共有するビルド成果物領域
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-flutter_learning}
+      - BUILDER_URL=http://builder:5000
+      - LESSON_PROJECT_ROOT=/lesson-projects
+      - BUILD_WORKSPACE_ROOT=/workspace
+      - BUILD_ARTIFACT_ROOT=/artifacts
+      - BUILD_TIMEOUT_SECONDS=${BUILD_TIMEOUT_SECONDS:-300}
+      - BUILD_MAX_CONCURRENCY=${BUILD_MAX_CONCURRENCY:-2}
+      - UPLOAD_MAX_FILE_SIZE=${UPLOAD_MAX_FILE_SIZE:-1048576}      # 1 MB
+      - UPLOAD_MAX_TOTAL_SIZE=${UPLOAD_MAX_TOTAL_SIZE:-52428800}   # 50 MB
+      - UPLOAD_MAX_FILE_COUNT=${UPLOAD_MAX_FILE_COUNT:-500}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_MODEL=${LLM_MODEL}
+      - FLUTTER_SDK_VERSION=${FLUTTER_SDK_VERSION:-3.27.4}
+    networks:
+      - app-net
+      - build-net
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── db ──────────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"          # ローカル開発時の DB クライアント接続用
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-flutter_learning}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+
+  # ── builder ─────────────────────────────────────────────────────────────────
+  builder:
+    build:
+      context: ./docker/builder
+      dockerfile: Dockerfile
+    volumes:
+      - build_workspaces:/workspace         # backend が書き込むプロジェクトファイル領域
+      - build_artifacts:/artifacts          # Flutter Web ビルド成果物の出力先
+      - flutter_pub_cache:/home/builder/.pub-cache  # pub パッケージキャッシュ（ビルド高速化）
+    environment:
+      - BUILD_WORKSPACE_ROOT=/workspace
+      - BUILD_ARTIFACT_ROOT=/artifacts
+    networks:
+      - build-net
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ボリューム
+# ─────────────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:          # PostgreSQL データ永続化
+  lesson_projects:        # 教材の初期プロジェクト・模範解答を永続保存 (backend 専用)
+  build_workspaces:       # ビルドごとの一時ワークスペース (backend・builder 共有)
+  build_artifacts:        # Flutter Web ビルド成果物 (backend・builder 共有)
+  flutter_pub_cache:      # Flutter pub パッケージキャッシュ
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ネットワーク
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  app-net:    # frontend / backend / db が所属
+    driver: bridge
+  build-net:  # backend / builder が所属。builder から db へのアクセスを遮断する
+    driver: bridge

@@ -1,0 +1,36 @@
+{
+  "name": "Backend (Node.js + Hono)",
+  "dockerComposeFile": ["../../docker-compose.yml"],
+  "service": "backend",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "Prisma.prisma",
+        "christian-kohler.path-intellisense",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "humao.rest-client"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "eslint.workingDirectories": ["/app"],
+        "[prisma]": {
+          "editor.defaultFormatter": "Prisma.prisma",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  },
+  "remoteUser": "node"
+}

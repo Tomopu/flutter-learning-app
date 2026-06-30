@@ -1,5 +1,28 @@
+# OS
 .DS_Store
+Thumbs.db
 
+# 環境変数（シークレットを含むため git 管理対象外）
+.env
+.env.local
+.env.*.local
+
+# Node.js
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# TypeScript
+apps/api/dist/
+
+# Docker ボリューム・一時ファイル
+*.log
+
+# drafts
 docs/99_drafts/04_prototypes/flutter-learning-app/_check
 docs/99_drafts/04_prototypes/flutter-learning-app/uploads
 docs/99_drafts/04_prototypes/flutter-learning-app/.thumbnail
